@@ -67,6 +67,11 @@ class Beer extends Bevrage
        return  $this->alcoholPercentage;
     }
 
+    public function setColor(string $newColor)
+    {
+        return $this->color = $newColor;
+    }
+
     private function beerInfo() {
        return "Hi i'm {$this->name} and have an alcochol percentage of {$this->alcoholPercentage} and I have a {$this->getColor()} color.";
     }
@@ -82,5 +87,5 @@ echo "<p>{$duvel->getTemperature()}</p>";
 $duvel->getInfo();
 
 $error = new Bevrage('blond', 3.5,'Duvel',8.5);
-$duvel = new Beer('light', 3.5,'Duvel',8.5);
+$duvel->setColor('light');
 echo $duvel->publicBeerInfo();
