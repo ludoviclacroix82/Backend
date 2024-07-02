@@ -49,3 +49,4 @@ $total = $item1->getTotalWithTaxe() + $item2->getTotalWithTaxe() + $item3->getTo
 echo "<br>".number_format($total, 2, '.', '');
 
 
+?>

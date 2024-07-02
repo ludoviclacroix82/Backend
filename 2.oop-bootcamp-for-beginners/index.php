@@ -14,5 +14,7 @@
     <h2>Bootcamp</h2>
         <a href="./case1.php">Case #1</a>
         <a href="./case2.php">Case #2</a>
+        <a href="./case3.php">Case #3</a>
+        <a href="./case4.php">Case #4</a>
 </body>
 </html>
