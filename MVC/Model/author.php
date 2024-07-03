@@ -18,8 +18,8 @@ class Author
 
     public function getArticles()
     {
-        $rawArticles = getArticleAuthorLink($this->id);       
+        $rawArticles = getArticleAuthorLink($this->id);
 
-        return $rawArticles;
+        return ($rawArticles) ? $rawArticles : null;
     }
 }
