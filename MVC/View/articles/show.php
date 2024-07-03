@@ -7,10 +7,12 @@ if ($article) {
     $title = $article->title;
     $publishDate = $article->formatPublishDate();
     $description = $article->description;
+    $image = $article->image;
 
     $idArticlePrevious = $article->getPrevious();
     $idArticleNext = $article->getNext();
     $author = $article->getAuthor();
+
 }
 
 ?>
@@ -23,6 +25,9 @@ if ($article) {
             </a>
         </h1>
         <p><?= $publishDate ?></p>
+        <p>
+            <img src="<?= $image ?>" alt="<?= $title ?>" >
+        </p>
         <p><?= $description ?></p>
 
         <?php // TODO: links to next and previous 

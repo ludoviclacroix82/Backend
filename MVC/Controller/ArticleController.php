@@ -29,7 +29,8 @@ class ArticleController
                 $rawArticle['id'],
                 $rawArticle['title'],
                 $rawArticle['description'],
-                $rawArticle['publish_date']
+                $rawArticle['publish_date'],
+                $rawArticle['Image']
             );
         }
         return $articles;
@@ -53,7 +54,8 @@ class ArticleController
                 intval($articleData[0]['id']),
                 $articleData[0]['title'],
                 $articleData[0]['description'],
-                $articleData[0]['publish_date']
+                $articleData[0]['publish_date'],
+                $articleData[0]['Image']
             );
 
             return $article;

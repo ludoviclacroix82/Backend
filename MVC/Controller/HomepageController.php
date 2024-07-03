@@ -1,9 +1,10 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 class HomepageController
 {
-    private static $limit = 2 ;
+    private static $limit = 2;
 
     public function index()
     {
@@ -25,7 +26,13 @@ class HomepageController
         $articles = [];
         foreach ($rawArticles as $rawArticle) {
             // We are converting an article from a "dumb" array to a much more flexible class
-            $articles[] = new Article($rawArticle['id'], $rawArticle['title'], $rawArticle['description'], $rawArticle['publish_date']);
+            $articles[] = new Article(
+                $rawArticle['id'],
+                $rawArticle['title'],
+                $rawArticle['description'],
+                $rawArticle['publish_date'],
+                $rawArticle['Image']
+            );
         }
         return $articles;
     }
