@@ -1,11 +1,18 @@
-<?php require 'View/includes/header.php'?>
+<?php require 'View/includes/header.php' ?>
 
-<?php // Use any data loaded in the controller here ?>
+<?php // Use any data loaded in the controller here 
+?>
 
 <section>
-    <p><a href="index.php?page=articles">To articles page</a></p>
+    <p><a href="articles">To articles page</a></p>
 
-    <p>Put your content here.</p>
+    <?php foreach ($articles as $article) : ?>
+        <li>
+            <a href="articles/show?id=<?= $article->id ?>">
+                <?= $article->title ?> (<?= $article->formatPublishDate() ?>)
+            </a>
+        </li>
+    <?php endforeach; ?>
 </section>
 
-<?php require 'View/includes/footer.php'?>
+<?php require 'View/includes/footer.php' ?>

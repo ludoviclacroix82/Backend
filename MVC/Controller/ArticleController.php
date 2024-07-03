@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 class ArticleController
 {
+
     public function index()
     {
         // Load all required data
@@ -19,19 +20,32 @@ class ArticleController
         // TODO: prepare the database connection
         // Note: you might want to use a re-usable databaseManager class - the choice is yours
         // TODO: fetch all articles as $rawArticles (as a simple array)
-        $rawArticles = [];
+        $rawArticles = getAllArticles();
 
         $articles = [];
         foreach ($rawArticles as $rawArticle) {
             // We are converting an article from a "dumb" array to a much more flexible class
-            $articles[] = new Article($rawArticle['title'], $rawArticle['description'], $rawArticle['publish_date']);
+            $articles[] = new Article($rawArticle['id'], $rawArticle['title'], $rawArticle['description'], $rawArticle['publish_date']);
         }
-
         return $articles;
     }
 
-    public function show()
+    public function show($id)
     {
-        // TODO: this can be used for a detail page
+        // Load all required data
+        $article = $this->getArticle($id);
+
+        // Load the view
+        require 'View/articles/show.php';
     }
+
+    private function getArticle($id)
+    {
+        $articleData = getArticlesID($id);
+
+        $article = new Article(intval($articleData[0]['id']), $articleData[0]['title'], $articleData[0]['description'], $articleData[0]['publish_date']);
+
+        return $article;
+    }
+   
 }

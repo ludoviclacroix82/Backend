@@ -11,10 +11,10 @@
     <header>
         <ul>
             <li>
-                <a href="index.php">Home</a>
+                <a href="/MVC/index.php">Home</a>
             </li>
             <li>
-                <a href="index.php?page=articles">Articles</a>
+                <a href="/MVC/articles">Articles</a>
             </li>
         </ul>
     </header>
