@@ -25,12 +25,17 @@ class ArticleController
         $articles = [];
         foreach ($rawArticles as $rawArticle) {
             // We are converting an article from a "dumb" array to a much more flexible class
-            $articles[] = new Article($rawArticle['id'], $rawArticle['title'], $rawArticle['description'], $rawArticle['publish_date']);
+            $articles[] = new Article(
+                $rawArticle['id'],
+                $rawArticle['title'],
+                $rawArticle['description'],
+                $rawArticle['publish_date']
+            );
         }
         return $articles;
     }
 
-    public function show($id)
+    public function show( int $id)
     {
         // Load all required data
         $article = $this->getArticle($id);
@@ -39,13 +44,19 @@ class ArticleController
         require 'View/articles/show.php';
     }
 
-    private function getArticle($id)
+    private function getArticle(int $id)
     {
         $articleData = getArticlesID($id);
 
-        $article = new Article(intval($articleData[0]['id']), $articleData[0]['title'], $articleData[0]['description'], $articleData[0]['publish_date']);
+        if ($articleData) {
+            $article = new Article(
+                intval($articleData[0]['id']),
+                $articleData[0]['title'],
+                $articleData[0]['description'],
+                $articleData[0]['publish_date']
+            );
 
-        return $article;
+            return $article;
+        }
     }
-   
 }

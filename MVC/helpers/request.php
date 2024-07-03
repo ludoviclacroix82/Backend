@@ -28,7 +28,8 @@ function getAllArticles()
     }
 }
 
-function getAllArticlesLimited(int $limit) {
+function getAllArticlesLimited(int $limit)
+{
     global $dbh;
 
     try {
@@ -61,7 +62,8 @@ function getArticlesID($id)
     }
 }
 
-function articlePagination(int $id, string $types) {
+function articlePagination(int $id, string $types)
+{
     global $dbh;
     try {
         if ($types === 'next') {
@@ -75,10 +77,65 @@ function articlePagination(int $id, string $types) {
         $query->closeCursor();
 
         return $article ? $article['id'] : null;
-
     } catch (PDOException $e) {
         error_log("Database connection error: " . $e->getMessage());
         return null;
     }
 }
 
+function getAuthor($id)
+{
+    global $dbh;
+    try {
+
+        $query = $dbh->prepare("SELECT * FROM author WHERE id = :id");
+        $query->execute(['id' => $id]);
+        $author = $query->fetchAll(PDO::FETCH_ASSOC);
+        $query->closeCursor();
+
+        return $author ? $author : null;
+    } catch (PDOException $e) {
+        echo "Erreur de connexion : " . $e->getMessage();
+    }
+}
+
+function getAuthorArticleLink($id_articles)
+{
+    global $dbh;
+    try {
+        $query = $dbh->prepare("SELECT id_author FROM articlesAuthorLink WHERE id_articles = :id_articles");
+        $query->execute(['id_articles' => $id_articles]);
+        $idAuthor = $query->fetchAll(PDO::FETCH_ASSOC);
+        $query->closeCursor();
+
+        $query = $dbh->prepare("SELECT * FROM author WHERE id = :id");
+        $query->execute(['id' => $idAuthor[0]['id_author']]);
+        $author = $query->fetchAll(PDO::FETCH_ASSOC);
+        $query->closeCursor();
+
+        return $author ? $author : null;
+    } catch (PDOException $e) {
+        echo "Erreur de connexion : " . $e->getMessage();
+    }
+}
+
+function getArticleAuthorLink($id_author)
+{
+    global $dbh;
+    try {
+        $query = $dbh->prepare("SELECT id_articles FROM articlesAuthorLink WHERE id_author = :id_author");
+        $query->execute(['id_author' => $id_author]);
+        $articleAuthor = $query->fetchAll(PDO::FETCH_ASSOC);
+        $query->closeCursor();
+
+        $listingArticles = [];
+
+        foreach ($articleAuthor as $article) {
+            $listingArticles []= getArticlesID($article['id_articles']);
+        }       
+
+        return ($listingArticles) ? $listingArticles : null;
+    } catch (PDOException $e) {
+        echo "Erreur de connexion : " . $e->getMessage();
+    }
+}

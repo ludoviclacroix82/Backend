@@ -8,9 +8,11 @@ error_reporting(E_ALL);
 
 //include all your model files here
 require 'Model/Article.php';
+require 'Model/author.php';
 //include all your controllers here
 require 'Controller/HomepageController.php';
 require 'Controller/ArticleController.php';
+require 'Controller/AuthorController.php';
 // include Helpers 
 require 'helpers/request.php';
 require 'helpers/dbConnect.php';
@@ -30,10 +32,17 @@ switch ($router) {
         // $articleController->index();
         (new ArticleController())->index();
         break;
+
     case 'articles/show':
         $id = $_GET['id'];
-        (new ArticleController())->show($id);
+        (new ArticleController())->show(intval($id));
         break;
+
+    case 'author':
+        $id = $_GET['id'];
+        (new AuthorController())->index(intval($id));
+        break;
+
     case 'home':
     default:
         (new HomepageController())->index();

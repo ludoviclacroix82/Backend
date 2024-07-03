@@ -36,4 +36,10 @@ class Article
         $previousArticle = articlePagination($this->id,'next');
         return $previousArticle  ?$previousArticle  : null;
     }
+
+    public function getAuthor(){
+        $author = getAuthorArticleLink($this->id);
+        return $author ? $author : null;
+    }
+
 }
