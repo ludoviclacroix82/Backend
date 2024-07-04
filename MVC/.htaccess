@@ -2,7 +2,7 @@
     RewriteEngine On
 
     # Change le répertoire racine pour les règles suivantes
-    RewriteBase /MVC
+    RewriteBase /
 
     # Redirige toutes les requêtes vers index.php si ce n'est pas un fichier ou un dossier existant
     RewriteCond %{REQUEST_FILENAME} !-f

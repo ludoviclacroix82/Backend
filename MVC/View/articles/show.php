@@ -20,7 +20,7 @@ if ($article) {
 <section>
     <?php if ($article) : ?>
         <h1><?= $title ?>
-            <a href="../author?id=<?= $author[0]['id'] ?>">
+            <a href="/author/<?= $author[0]['id'] ?>">
                 <?= " - By {$author[0]['name']} - {$author[0]['lastname']}" ?>
             </a>
         </h1>
@@ -33,10 +33,10 @@ if ($article) {
         <?php // TODO: links to next and previous 
         ?>
         <?php if ($idArticlePrevious != null) : ?>
-            <a href="./show?id=<?= $idArticlePrevious ?>">Previous article</a>
+            <a href="./<?= $idArticlePrevious ?>">Previous article</a>
         <?php endif; ?>
         <?php if ($idArticleNext != null) : ?>
-            <a href="./show?id=<?= $idArticleNext ?>">Next article</a>
+            <a href="./<?= $idArticleNext ?>">Next article</a>
         <?php endif; ?>
     <?php else : ?>
         <h3>No Found</h3>

@@ -16,35 +16,33 @@ require 'Controller/AuthorController.php';
 // include Helpers 
 require 'helpers/request.php';
 require 'helpers/dbConnect.php';
+require_once 'helpers/_Router.php';
 
-// Get the current page to load
-// If nothing is specified, it will remain empty (home should be loaded)
-$page = $_GET['page'] ?? null;
+try {
 
-$router = routing();
+    $router = new Router;
 
-// Load the controller
-// It will *control* the rest of the work to load the page
-switch ($router) {
-    case 'articles':
-        // This is shorthand for:
-        // $articleController = new ArticleController;
-        // $articleController->index();
-        (new ArticleController())->index();
-        break;
-
-    case 'articles/show':
-        $id = $_GET['id'];
-        (new ArticleController())->show(intval($id));
-        break;
-
-    case 'author':
-        $id = $_GET['id'];
-        (new AuthorController())->index(intval($id));
-        break;
-
-    case 'home':
-    default:
+    $router->get('/', function () {
         (new HomepageController())->index();
-        break;
+        exit;
+    });
+
+    $router->get('/articles', function () {
+        (new ArticleController())->index();
+        exit;
+    });
+
+    $router->get('/articles/show/:id', function ($id) {
+        (new ArticleController())->show(intval($id));
+        exit;
+    });
+
+    $router->get('/author/:id', function ($id) {
+        (new AuthorController())->index(intval($id));
+        exit;
+    });
+
+    $router->run();
+} catch (Exception $e) {
+    echo "{$e->getCode()} - {$e->getMessage()}";
 }

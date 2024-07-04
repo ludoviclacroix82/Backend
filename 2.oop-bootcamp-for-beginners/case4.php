@@ -34,7 +34,7 @@ class Groups extends Students
 {
 
     private int $num;
-    public static int $totalGroup = 0;
+    public static int $totalGroup;
 
     public function __construct(int $num, string $name, int $grade)
     {

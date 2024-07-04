@@ -59,6 +59,8 @@ class ArticleController
             );
 
             return $article;
+
+        throw new Exception('Page No Found',404); 
         }
     }
 }
