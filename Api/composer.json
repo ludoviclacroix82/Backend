@@ -1,0 +1,16 @@
+{
+    "name": "ludovic/api",
+    "description": "Api developpement",
+    "autoload": {
+        "psr-4": {
+            "Api\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ludovic lacroix",
+            "email": "ludovic.lacroix82@gmail.com"
+        }
+    ],
+    "require": {}
+}
