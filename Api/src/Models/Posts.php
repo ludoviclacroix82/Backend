@@ -22,7 +22,8 @@ class Posts
         $this->updated_at = $updated_at;
     }
 
-    public static function loadData($postsData){
+    public static function loadData($postsData)
+    {
         $datas = [];
 
         foreach ($postsData as $post) {
@@ -36,5 +37,57 @@ class Posts
             );
         }
         return $datas ;
+    }
+
+    public static function dataBodyInsert()
+    {
+
+            $bodydata = [];
+            $bodydata = file_get_contents('php://input');
+            $bodyDatas = json_decode($bodydata, true);
+
+            $params = [
+                ':title' => securityInput($bodyDatas['title']),
+                ':body' => securityInput($bodyDatas['body']),
+                ':author' => securityInput($bodyDatas['author']),
+                ':created_at' => dates('Y-m-d h:i:s'),
+                ':updated_at' => dates('Y-m-d h:i:s')
+            ];
+
+            return $params;
+    }
+
+    public static function dataBodyUpdate( int $id)
+    {
+
+        $bodydata = [];
+        $params = [];
+        $bodydata = file_get_contents('php://input');
+        $bodyDatas = json_decode($bodydata, true);
+
+        foreach ($bodyDatas as $key => $value) {
+            $paramsBody = [":{$key}" => securityInput($value)];
+        }
+
+        $updateParams = ''; // recuperation pour le SET de sql via les params en body ex: title = : title     
+
+        foreach ($paramsBody as $key => $value) {
+            $field = str_replace(':','',$key);
+            $updateParams .= "{$field} = {$key}, ";                
+        }
+
+        $updateParams .= 'updated_at = :updated_at '; // ajout updated a data pour le SET SQL
+
+        $paramsNoBody =  [
+            ':id' => securityInput(intval($id)),
+            ':updated_at' => dates('Y-m-d h:i:s')
+        ];
+
+        $params = array_merge($paramsBody,$paramsNoBody);
+
+        return [
+            'params' => $params ,
+            'updateParams' => $updateParams,
+        ];          
     }
 }

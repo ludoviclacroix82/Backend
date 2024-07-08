@@ -35,12 +35,13 @@ class Database
         return $this->pdo;
     }
 
-    public function query(string $statement , ?array $params = []): array
+    public function query(string $statement, ?array $params = []): array
     {
         try {
             $request = $this->getPdo()->prepare($statement);
             $request->execute($params);
             $datas = $request->fetchAll(PDO::FETCH_ASSOC);
+
             return $datas;
         } catch (PDOException $e) {
             // Handle query execution error
@@ -48,4 +49,3 @@ class Database
         }
     }
 }
-

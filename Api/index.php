@@ -9,24 +9,42 @@ use Api\config\Database;
 require_once 'src/config/config.php';
 require_once 'src/helpers/request.php';
 
-try {
+try {    
+
     $router = new Router;
     $router->get('/posts', function () {
         $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
-        $postController = new Postcontroller($db);
-
-       $posts = $postController->getPosts();
-       echo $posts;
-       exit;
-    });    
+        $posts = (new Postcontroller($db))->getPosts();
+        print_r($posts);
+        exit;
+    });
     $router->get('/post/:id', function ($id) {
         $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
-        $postController = new Postcontroller($db);
+        $post = (new Postcontroller($db))->getPost($id);
+        print_r($post);
+        exit;
+    });
+    $router->post('/post', function () {
 
-       $post = $postController->getPost($id);
-       echo $post;
-       exit;
-    }); 
+        $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
+        $post = (new Postcontroller($db))->postPost();
+        print_r($post);
+        exit;
+    });
+
+    $router->put('/post/:id', function ($id) {
+        $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
+        $post = (new Postcontroller($db))->putPost($id);
+        print_r($post);
+        exit;
+    });
+
+    $router->delete('/post/:id', function ($id) {
+        $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
+        $post = (new Postcontroller($db))->deletePost($id);
+        print_r($post);
+        exit;
+    });
 
     $router->run();
 } catch (Exception $e) {

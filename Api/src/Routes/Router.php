@@ -24,6 +24,16 @@ class Router
         $this->request('POST', $path, $action);
     }
 
+    public function put(string $path, Closure $action): void
+    {
+        $this->request('PUT', $path, $action);
+    }
+
+    public function delete(string $path, Closure $action): void
+    {
+        $this->request('DELETE', $path, $action);
+    }
+
     public function run(): void
     {       
             $method = $_SERVER['REQUEST_METHOD'];
