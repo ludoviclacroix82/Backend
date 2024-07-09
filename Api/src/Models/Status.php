@@ -20,19 +20,19 @@ class Status
     public function status(int $status, string $message, ?array $params = null){
 
         if($this->params != null){
-            $responce = [
+            $response = [
                 'status' => $this->status,
                 'message' => $this->message,
                 'params' => $this->params
             ];
         }else{
-            $responce = [
+            $response = [
                 'status' => $this->status,
                 'message' => $this->message,
             ];
         }
 
-        $jsonType = createJson($responce);
+        $jsonType = createJson($response);
         return $jsonType;
     }
 }

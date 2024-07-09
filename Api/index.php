@@ -9,44 +9,40 @@ use Api\config\Database;
 require_once 'src/config/config.php';
 require_once 'src/helpers/request.php';
 
-try {    
-
     $router = new Router;
-    $router->get('/posts', function () {
+    $router->get('/posts/:key', function ($key) {
         $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
-        $posts = (new Postcontroller($db))->getPosts();
+        $posts = (new Postcontroller($db))->getPosts($key);
         print_r($posts);
         exit;
     });
-    $router->get('/post/:id', function ($id) {
+    $router->get('/post/:id/:key', function ($id,$key) {
         $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
-        $post = (new Postcontroller($db))->getPost($id);
+        $post = (new Postcontroller($db))->getPost($id,$key);
         print_r($post);
         exit;
     });
-    $router->post('/post', function () {
+    $router->post('/post/:key', function ($key) {
 
         $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
-        $post = (new Postcontroller($db))->postPost();
-        print_r($post);
-        exit;
-    });
-
-    $router->put('/post/:id', function ($id) {
-        $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
-        $post = (new Postcontroller($db))->putPost($id);
+        $post = (new Postcontroller($db))->postPost($key);
         print_r($post);
         exit;
     });
 
-    $router->delete('/post/:id', function ($id) {
+    $router->put('/post/:id/:key', function ($id,$key) {
         $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
-        $post = (new Postcontroller($db))->deletePost($id);
+        $post = (new Postcontroller($db))->putPost($id,$key);
+        print_r($post);
+        exit;
+    });
+
+    $router->delete('/post/:id/:key', function ($id,$key) {
+        $db = new Database(DB_NAME, DB_USER, DB_PASS, DB_HOST);
+        $post = (new Postcontroller($db))->deletePost($id,$key);
         print_r($post);
         exit;
     });
 
     $router->run();
-} catch (Exception $e) {
-    echo "{$e->getCode()} - {$e->getMessage()}";
-}
+

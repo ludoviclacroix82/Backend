@@ -2,6 +2,8 @@
 
 namespace Api\routes;
 
+use Api\Models\Status;
+
 use Exception;
 use Closure;
 
@@ -35,10 +37,11 @@ class Router
     }
 
     public function run(): void
-    {       
+    {
+        try {
             $method = $_SERVER['REQUEST_METHOD'];
             $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    
+
             if (isset($this->routes[$method])) {
                 foreach ($this->routes[$method] as $routeUrl => $target) {
                     // Utiliser des sous-modèles nommés dans le modèle d'expression régulière pour capturer chaque valeur de paramètre séparément
@@ -50,8 +53,11 @@ class Router
                         return;
                     }
                 }
-            }        
-        
-            throw new Exception('Page No Found',404); 
+            }
+        } catch (\Throwable $th) {
+            $response = (new Status(404, 'no found'))->status(404, 'no found');
+            print_r($response);
+            exit;
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Api\Models\Status;
+
 function createJson($data)
 {
 
@@ -9,11 +11,7 @@ function createJson($data)
 
         return $json;
     } catch (\Throwable $th) {
-        $reponse = [
-            'status' => '500',
-            'message' => 'Internal Server Error',
-        ];
-        return $reponse;
+        return (new Status(500, 'Internal Server Error'))->status(500, 'Internal Server Error');
     }
 }
 

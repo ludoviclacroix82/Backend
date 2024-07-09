@@ -62,11 +62,12 @@ class Posts
 
         $bodydata = [];
         $params = [];
+        $paramsBody = [];
         $bodydata = file_get_contents('php://input');
         $bodyDatas = json_decode($bodydata, true);
 
         foreach ($bodyDatas as $key => $value) {
-            $paramsBody = [":{$key}" => securityInput($value)];
+            $paramsBody[":{$key}"] = securityInput($value);
         }
 
         $updateParams = ''; // recuperation pour le SET de sql via les params en body ex: title = : title     

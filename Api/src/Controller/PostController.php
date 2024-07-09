@@ -5,6 +5,7 @@ namespace Api\Controller;
 use Api\config\Database;
 use Api\Models\Posts;
 use Api\Models\Status;
+use Api\Models\ApiKeys;
 
 class Postcontroller
 {
@@ -15,164 +16,174 @@ class Postcontroller
         $this->database = $database;
     }
 
-    public function getPosts()
+    public function getPosts($key)
     {
-        $responce = [];
+        $response = [];
         $datas = [];
-        try {
-            $postsData = $this->database->query('SELECT * FROM posts');
-            $datas = Posts::loadData($postsData); //demande a Pierre si pas d'autre solution qu'une method static
 
-            if ($datas) {
-                $responce = (new Status(200, 'OK', $datas))->status(200, 'OK', $datas);
-                return $responce;
-                exit;
+        try {
+            $apiKeyExist = (new ApiKeys($key, $this->database))->isExist($key);
+
+            if ($apiKeyExist) {
+                $postsData = $this->database->query('SELECT * FROM posts');
+                $datas = Posts::loadData($postsData);
+                //demande a Pierre si pas d'autre solution qu'une method static
+                // probleme :: (new Posts( "demande les 6 params ???))->loadData($postsData);
+
+                if ($datas) {
+                    return (new Status(200, 'OK', $datas))->status(200, 'OK', $datas);
+                } else {
+                    return (new Status(404, 'no posts found', null))->status(404, 'no posts found', null);
+                }
             } else {
-                $responce = (new Status(404, 'no posts found', null))->status(404, 'no posts found', null);
-                return $responce;
-                exit;
+                return (new Status(400, 'Bad APi Keys'))->status(400, 'Bad APi Keys');
             }
         } catch (\Throwable $th) {
-            $responce = (new Status(404, 'no found'))->status(404, 'no found');
-            return $responce;
-            exit;
+            return (new Status(404, 'no found'))->status(404, 'no found');
+
+
+            print_r($th);
         }
     }
 
-    public function getPost($id)
+    public function getPost($id, $key)
     {
 
-        $responce = [];
+        $response = [];
         $params = [];
         try {
 
-            $params = [
-                ':id' => securityInput($id),
-            ];
+            $apiKeyExist = (new ApiKeys($key, $this->database))->isExist($key);
 
-            $postsData = $this->database->query('SELECT * FROM posts WHERE id = :id', $params);
-            $datas = Posts::loadData($postsData); //demande a Pierre si pas d'autre solution que static
-
-            if ($datas) {
-                $responce = (new Status(200, 'OK', $datas))->status(200, 'OK', $datas);
-                return $responce;
-                exit;
-            } else {
-                $responce = (new Status(404, 'no posts found'))->status(404, 'no posts found');
-                return $responce;
-                exit;
-            }
-        } catch (\Throwable $th) {
-            $responce = (new Status(404, 'no posts found'))->status(404, 'no posts found');
-            return $responce;
-            exit;
-        }
-    }
-
-    public function postPost()
-    {
-        try {
-
-            $params = Posts::dataBodyInsert();
-            $postInsert = $this->database->query(
-                'INSERT INTO posts(
-                    title, 
-                    body, 
-                    author, 
-                    created_at, 
-                    updated_at) 
-                VALUES (
-                    :title, 
-                    :body, 
-                    :author, 
-                    :created_at, 
-                    :updated_at)',
-                $params
-            );
-
-            $responce = (new Status(201, 'Created', $params))->status(201, 'Created', $params);
-            return $responce;
-            exit;
-        } catch (\Throwable $th) {
-            $responce = (new Status(400, 'Bad Request'))->status(201, 'Created');
-            return $responce;
-            exit;
-        }
-    }
-
-    public function putPost($id)
-    {
-        $id = securityInput($id);
-        try {
-
-            $postExist = $this->postExist($id);
-
-            $params = Posts::dataBodyUpdate($id);
-
-            if ($postExist) {
-
-                try {
-
-                    $postUpdate = $this->database->query(
-                        'UPDATE posts 
-                        SET ' .  $params['updateParams'] . '
-                        WHERE id = :id',
-                        $params['params']
-                    );
-                    $responce = (new Status(201, 'Update', $params['params']))->status(201, 'Update', $params['params']);
-                    return $responce;
-                    exit;
-                } catch (\Throwable $th) {
-                    $responce = (new Status(400, 'Bad request'))->status(400, 'Bad request');
-                    return $responce;
-                    exit;
-                }
-            } else {
-                $responce = (new Status(404, 'Post no found'))->status(404, 'Post no found');
-                return $responce;
-                exit;
-            }
-        } catch (\Throwable $th) {
-            $responce = (new Status(400, 'Bad request'))->status(400, 'Bad request');
-            return $responce;
-            exit;
-        }
-    }
-
-    public function deletePost($id)
-    {
-        try {
-            $postExist = $this->postExist($id);
-            if ($postExist) {
+            if ($apiKeyExist) {
 
                 $params = [
                     ':id' => securityInput($id),
                 ];
 
-                $postDelete  = $this->database->query(
-                    'DELETE 
-                    FROM posts
-                    WHERE id=:id',
-                    $params
-                );
-                $responce = (new Status(201, 'Delete', $params))->status(201, 'Delete', $params);
-                return $responce;
+                $postsData = $this->database->query('SELECT * FROM posts WHERE id = :id', $params);
+                $datas = Posts::loadData($postsData); //demande a Pierre si pas d'autre solution que static
 
+                if ($datas) {
+                    return (new Status(200, 'OK', $datas))->status(200, 'OK', $datas);
+                } else {
+                    return (new Status(404, 'no posts found'))->status(404, 'no posts found');
+                }
             } else {
-                $responce = (new Status(404, 'Post no found'))->status(404, 'Post no found');
-                return $responce;
-                exit;
+                return (new Status(400, 'Bad APi Keys'))->status(400, 'Bad APi Keys');
             }
         } catch (\Throwable $th) {
-            $responce = (new Status(400, 'Bad request'))->status(400, 'Bad request');
-            return $responce;
-            exit;
+            return (new Status(404, 'no posts found'))->status(404, 'no posts found');
+        }
+    }
+
+    public function postPost($key)
+    {
+        try {
+            $apiKeyExist = (new ApiKeys($key, $this->database))->isExist($key);
+
+            if ($apiKeyExist) {
+                $params = Posts::dataBodyInsert();
+                $postInsert = $this->database->query(
+                    'INSERT INTO posts(
+                        title, 
+                        body, 
+                        author, 
+                        created_at, 
+                        updated_at) 
+                    VALUES (
+                        :title, 
+                        :body, 
+                        :author, 
+                        :created_at, 
+                        :updated_at)',
+                    $params
+                );
+
+                return (new Status(201, 'Created', $params))->status(201, 'Created', $params);
+            } else {
+                return (new Status(400, 'Bad APi Keys'))->status(400, 'Bad APi Keys');
+            }
+        } catch (\Throwable $th) {
+            return (new Status(400, 'Bad Request'))->status(400, 'Bad Request');
+        }
+    }
+
+    public function putPost($id, $key)
+    {
+
+        try {
+
+            $apiKeyExist = (new ApiKeys($key, $this->database))->isExist($key);
+
+            if ($apiKeyExist) {
+
+                $id = securityInput($id);
+
+                $postExist = $this->postExist($id);
+
+                $params = Posts::dataBodyUpdate($id);
+
+                if ($postExist) {
+
+                    try {
+
+                        $postUpdate = $this->database->query(
+                            'UPDATE posts 
+                            SET ' .  $params['updateParams'] . '
+                            WHERE id = :id',
+                            $params['params']
+                        );
+                        return (new Status(201, 'Update', $params['params']))->status(201, 'Update', $params['params']);
+                    } catch (\Throwable $th) {
+                        return (new Status(400, 'Bad request'))->status(400, 'Bad request');
+                    }
+                } else {
+                    return (new Status(404, 'Post no found'))->status(404, 'Post no found');
+                }
+            } else {
+                return (new Status(400, 'Bad APi Keys'))->status(400, 'Bad APi Keys');
+            }
+        } catch (\Throwable $th) {
+            return (new Status(400, 'Bad request'))->status(400, 'Bad request');
+        }
+    }
+
+    public function deletePost($id, $key)
+    {
+        try {
+
+            $apiKeyExist = (new ApiKeys($key, $this->database))->isExist($key);
+
+            if ($apiKeyExist) {
+                $postExist = $this->postExist($id);
+                if ($postExist) {
+
+                    $params = [
+                        ':id' => securityInput($id),
+                    ];
+
+                    $postDelete  = $this->database->query(
+                        'DELETE 
+                        FROM posts
+                        WHERE id=:id',
+                        $params
+                    );
+                    return (new Status(201, 'Delete', $params))->status(201, 'Delete', $params);
+                } else {
+                    return (new Status(404, 'Post no found'))->status(404, 'Post no found');
+                }
+            } else {
+                return (new Status(400, 'Bad APi Keys'))->status(400, 'Bad APi Keys');
+            }
+        } catch (\Throwable $th) {
+            return (new Status(400, 'Bad request'))->status(400, 'Bad request');
         }
     }
 
     public function postExist($id)
     {
-        //Ckeck si le post exist
+        //Check si le post exist
         $paramsCheck = [
             ':id' => securityInput($id),
         ];
