@@ -43,6 +43,7 @@ try {
     });
 
     $router->run();
+    
 } catch (Exception $e) {
     echo "{$e->getCode()} - {$e->getMessage()}";
 }
